@@ -12,12 +12,19 @@ using std::string, std::vector;
 struct Vec2 {
     int y, x;
 
+    // This mutates the original Vec2
     void add(const Vec2& operand) {
         y += operand.y;
         x += operand.x;
     }
 
-    bool operator==(const Vec2& other) {
+    // This does not mutate anything
+    Vec2 addCopy(const Vec2& operand) const {
+        Vec2 newVec2 = {y + operand.y, x + operand.x};
+        return newVec2;
+    }
+
+    bool operator==(const Vec2& other) const {
         return y == other.y && x == other.x;
     }
 };
@@ -27,6 +34,11 @@ namespace Direction {
     const Vec2 RIGHT = {0, 1};
     const Vec2 UP = {-1, 0};
     const Vec2 DOWN = {1, 0};
+    const Vec2 ALL[4] = {LEFT, UP, RIGHT, DOWN};
+
+    const Vec2 opposite(const Vec2& dir) {
+        return {dir.y * -1, dir.x * -1};
+    }
 }
 
 class Stack : std::stack<int> {
@@ -188,6 +200,51 @@ void interpretProgram(const vector<string>& program) {
                 }
                 buffer = "";
                 break;
+            case '+': {
+                int start_index;
+                for (int i = 0; i < 4; i++) {
+                    if (Direction::ALL[i] == Direction::opposite(direction)) {
+                        start_index = i;
+                        break;
+                    }
+                }
+
+                vector<Vec2> paths;
+                for (int i = 1; i < 4; i++) {
+                    int dir_index = (start_index + i) % 4;
+                    const Vec2& dir = Direction::ALL[dir_index];
+                    Vec2 path = location.addCopy(dir);
+
+                    // TODO: Maybe add support for going from + to \ or /
+                    if (dir == Direction::LEFT || dir == Direction::RIGHT ) {
+                        const string& line = program[path.y];
+                        if (path.x < 0 || path.x >= (int) line.size() || line[path.x] != '-')
+                            continue;
+                    } else if (dir == Direction::UP || dir == Direction::DOWN) {
+                        int lines = program.size();
+                        if (path.y < 0 || path.y >= lines || program[path.y][path.x] != '|')
+                            continue;
+                    }
+                    // Path is fine
+                    paths.push_back(dir);
+                }
+                
+                if (paths.size() == 2) {
+                    if (stack.pop()) direction = paths[0];
+                    else direction = paths[1];
+                } else if (paths.size() == 3) {
+                    if (stack.pop()) {
+                        direction = paths[0];
+                        stack.pop();
+                    }
+                    else if (stack.pop()) direction = paths[1];
+                    else direction = paths[2];
+                } else {
+                    crash("must have at least two exit paths", string(1, c), location);
+                }
+
+                break;
+            }
             case '}':
             case '{':
                 if (return_stack.isEmpty()) {
