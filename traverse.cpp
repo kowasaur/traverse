@@ -95,6 +95,33 @@ void interpretProgram(const vector<string>& program) {
     while (true) {
         char c = program[location.y][location.x];
 
+        // Character literals
+        if (buffer.size() > 0 && buffer[0] == '\'') {
+            if (buffer.size() > 1 && c == '\'') {
+                char new_c;
+                int i1 = 1;
+                int i2 = 2;
+                if (direction == Direction::LEFT || direction == Direction::UP) {
+                    i1 = 2;
+                    i2 = 1;
+                }
+
+                if (buffer.size() == 2) new_c = buffer[1];
+                else if (buffer.size() == 3 && buffer[i1] == '\\') {
+                    if (buffer[i2] == 'n') new_c = '\n';
+                    else crash("unsupported escape character", buffer, location);
+                }
+                else crash("character must be singular", buffer, location);
+
+                stack.push(new_c);
+                buffer = "";
+            } else {
+                buffer += c;
+            }
+            location.add(direction);
+            continue;
+        }
+
         switch (c) {
             case '/':
             case '\\':
@@ -106,15 +133,19 @@ void interpretProgram(const vector<string>& program) {
                     std::reverse(buffer.begin(), buffer.end());
                 }
 
+                // Addition
                 if (buffer == "add") {
                     int a = stack.pop();
                     int b = stack.pop();
                     stack.push(a + b);
+                // Printing number
                 } else if (buffer == "*") {
-                    // printing
                     printf("%d\n", stack.pop());
+                // Printing ascii character
+                } else if (buffer == "&") {
+                    printf("%c", stack.pop());
+                // Integer literals
                 } else {
-                    // number stuff
                     int num;
                     try {
                         num = std::stoi(buffer);
