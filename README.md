@@ -26,8 +26,15 @@ When an integer is encounted, it is pushed onto the stack.
 
 ### Intrinsics
 
-| Name  | Signature  | Description                 |
-| ----- | ---------- | --------------------------- |
-| `add` | `a b -> c` | Add two integers together   |
-| `*`   | `a ->`     | Print as an integer         |
-| `&`   | `a ->`     | Print as an ASCII character |
+Note that in the signature, the top of the stack is towards the right.
+
+| Name  | Signature        | Description                              |
+| ----- | ---------------- | ---------------------------------------- |
+| `add` | `b a -> (a + b)` | Add two integers together                |
+| `sub` | `b a -> (b - a)` | Subtract two integers                    |
+| `mul` | `b a -> (a * b)` | Multiply two integers                    |
+| `div` | `b a -> (b / a)` | Divide two integers (C integer division) |
+| `mod` | `b a -> (b % a)` | Perform modulo on two integers           |
+| `*`   | `a ->`           | Print as an integer                      |
+| `&`   | `a ->`           | Print as an ASCII character              |
+| `%`   | `a -> a a`       | Duplicate the top of the stack           |

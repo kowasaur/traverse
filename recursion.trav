@@ -1,0 +1,5 @@
+main}-100-loop-0-{      loop}-decrement-%-+-loop-{
+                                          |
+decrement}-1-sub-%-*-{                    \-{
+
+this prints the numbers 99 to 0

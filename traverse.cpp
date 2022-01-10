@@ -177,12 +177,37 @@ void interpretProgram(const vector<string>& program) {
                     int a = stack.pop();
                     int b = stack.pop();
                     stack.push(a + b);
+                // Subtraction
+                } else if (buffer == "sub") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b - a);
+                // Multiplication
+                } else if (buffer == "mul") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(a * b);
+                // Division
+                } else if (buffer == "div") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b / a);
+                // Modulo
+                } else if (buffer == "mod") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b % a);
                 // Printing number
                 } else if (buffer == "*") {
                     printf("%d\n", stack.pop());
                 // Printing ascii character
                 } else if (buffer == "&") {
                     printf("%c", stack.pop());
+                // Duplication
+                } else if (buffer == "%") {
+                    int a = stack.pop();
+                    stack.push(a);
+                    stack.push(a);
                 // Procedures
                 } else if (proc_locs.contains(buffer)) {
                     return_stack.push(location, direction);
