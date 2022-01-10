@@ -4,6 +4,12 @@
 
 Traverse is a stack-based, two-dimensional programming language, inspired by [Porth](https://gitlab.com/tsoding/porth).
 
+## Goals
+
+-   [ ] Turing Complete
+-   [ ] Visual Interpreter
+-   [ ] Compiler
+
 ## Language Reference
 
 ### Paths

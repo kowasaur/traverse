@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstdio>
+#include <tuple>
 #include <vector>
 #include <stack>
 #include <unordered_map>
@@ -37,6 +38,30 @@ class Stack : std::stack<int> {
         }
         void push(int a) { std::stack<int>::push(a); }
         bool isEmpty() { return std::stack<int>::empty(); }
+};
+
+class ReturnStack {
+    private:
+        std::stack<Vec2> locations;
+        std::stack<Vec2> directions;
+
+    public:
+        void push(const Vec2 location, const Vec2 direction) {
+            locations.push(location);
+            directions.push(direction);
+        }
+
+        std::tuple<Vec2, Vec2> pop() {
+            Vec2 loc = locations.top();
+            Vec2 dir = directions.top();
+            locations.pop();
+            directions.pop();
+            return std::make_tuple(loc, dir);
+        }
+
+        bool isEmpty() {
+            return locations.empty();
+        }
 };
 
 void crash(const char* error, const string& token, const Vec2& location) {
@@ -89,7 +114,9 @@ void interpretProgram(const vector<string>& program) {
     Vec2 location = proc_locs["main"];
     Vec2 direction = program[location.y][location.x] == '}' ? Direction::RIGHT : Direction::LEFT;
     location.add(direction);
+
     Stack stack;
+    ReturnStack return_stack;
     string buffer;
     
     while (true) {
@@ -144,6 +171,11 @@ void interpretProgram(const vector<string>& program) {
                 // Printing ascii character
                 } else if (buffer == "&") {
                     printf("%c", stack.pop());
+                // Procedures
+                } else if (proc_locs.contains(buffer)) {
+                    return_stack.push(location, direction);
+                    location = proc_locs[buffer];
+                    direction = program[location.y][location.x] == '}' ? Direction::RIGHT : Direction::LEFT;
                 // Integer literals
                 } else {
                     int num;
@@ -158,8 +190,12 @@ void interpretProgram(const vector<string>& program) {
                 break;
             case '}':
             case '{':
-                if (stack.isEmpty()) crash("No exit code on stack", string(1, c), location);
-                exit(stack.pop());
+                if (return_stack.isEmpty()) {
+                    if (stack.isEmpty()) crash("No exit code on stack", string(1, c), location);
+                    exit(stack.pop());
+                }
+                std::tie(location, direction) = return_stack.pop();
+                break;
             default:
                 buffer += c;
         }
