@@ -2,9 +2,9 @@
 #include <cstdio>
 #include <vector>
 #include <stack>
+#include <unordered_map>
 #include <string>
 #include <fstream>
-#include <iostream>
 
 using std::string, std::vector;
 
@@ -55,8 +55,40 @@ void testError(bool is_error, const char* message) {
 }
 
 void interpretProgram(const vector<string>& program) {
-    Vec2 location = {0, 0};
-    Vec2 direction = Direction::RIGHT;
+    std::unordered_map<string, Vec2> proc_locs; // location of procedures
+    
+    // Find the procedures
+    for (int h = 0; h < (int) program.size(); h++) {
+        const string& line = program[h];
+        int line_width = line.size();
+        for (int i = 0; i < line_width; i++) {
+            char c = line[i];
+            if (c == '}' && i != 0 && line[i - 1] != ' ') {
+                string buffer;
+                int j = 1;
+                while (i - j >= 0 && line[i - j] != ' ') {
+                    buffer += line[i - j];
+                    j++;
+                }
+                std::reverse(buffer.begin(), buffer.end());
+                proc_locs[buffer] = {h, i};
+            } else if (c == '{' && line[i + 1] != ' ') {
+                string buffer;
+                int j = 1;
+                while (i + j < line_width && line[i + j] != ' ') {
+                    buffer += line[i + j];
+                    j++;
+                }
+                proc_locs[buffer] = {h, i};
+            }
+        }
+    }
+
+    testError(!proc_locs.contains("main"), "No main procedure");
+    
+    Vec2 location = proc_locs["main"];
+    Vec2 direction = program[location.y][location.x] == '}' ? Direction::RIGHT : Direction::LEFT;
+    location.add(direction);
     Stack stack;
     string buffer;
     
@@ -74,9 +106,7 @@ void interpretProgram(const vector<string>& program) {
                     std::reverse(buffer.begin(), buffer.end());
                 }
 
-                if (buffer == "main}") {
-                    // do nothing for now
-                } else if (buffer == "add") {
+                if (buffer == "add") {
                     int a = stack.pop();
                     int b = stack.pop();
                     stack.push(a + b);
@@ -88,13 +118,14 @@ void interpretProgram(const vector<string>& program) {
                     int num;
                     try {
                         num = std::stoi(buffer);
-                    } catch (const std::invalid_argument &) {
+                    } catch (const std::invalid_argument&) {
                         crash("Unknown word", buffer, location);
                     }
                     stack.push(num);
                 }
                 buffer = "";
                 break;
+            case '}':
             case '{':
                 if (stack.isEmpty()) crash("No exit code on stack", string(1, c), location);
                 exit(stack.pop());
