@@ -1,0 +1,25 @@
+{
+    "name": "traverse",
+    "displayName": "Traverse",
+    "description": "Syntax highlighting for Traverse",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.63.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "traverse",
+            "aliases": ["Traverse", "traverse"],
+            "extensions": [".trav"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "traverse",
+            "scopeName": "source.traverse",
+            "path": "./syntaxes/traverse.tmLanguage.json"
+        }]
+    }
+}

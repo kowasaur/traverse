@@ -10,13 +10,18 @@ Traverse is a stack-based, two-dimensional programming language, inspired by [Po
 
 \- | \ /
 
+### Comments
+
+Anything not connected to a path is comment.
+
 ### Integer
 
 When an integer is encounted, it is pushed onto the stack.
 
 ### Intrinsics
 
-| Name  | Signature  | Description                                      |
-| ----- | ---------- | ------------------------------------------------ |
-| `add` | `a b -> c` | Add two integers together                        |
-| `*`   | `a -> `    | Print the top element of the stack as an integer |
+| Name  | Signature  | Description                 |
+| ----- | ---------- | --------------------------- |
+| `add` | `a b -> c` | Add two integers together   |
+| `*`   | `a ->`     | Print as an integer         |
+| `&`   | `a ->`     | Print as an ASCII character |

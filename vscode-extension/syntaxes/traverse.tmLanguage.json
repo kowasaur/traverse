@@ -1,0 +1,34 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Traverse",
+    "patterns": [
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#characters"
+        }
+    ],
+    "repository": {
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.traverse",
+                    "match": "-|\\\\|\\||/"
+                }
+            ]
+        },
+        "characters": {
+            "name": "string.quoted.single.traverse",
+            "begin": "'",
+            "end": "'",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.traverse",
+                    "match": "\\\\."
+                }
+            ]
+        }
+    },
+    "scopeName": "source.traverse"
+}
