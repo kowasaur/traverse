@@ -197,6 +197,36 @@ void interpretProgram(const vector<string>& program) {
                     int a = stack.pop();
                     int b = stack.pop();
                     stack.push(b % a);
+                // Equal
+                } else if (buffer == "=") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(a == b);
+                // Not Equal
+                } else if (buffer == "!=") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(a != b);
+                // Greater than
+                } else if (buffer == ">") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b > a);
+                // Less than
+                } else if (buffer == "<") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b < a);
+                // Greater than or Equal
+                } else if (buffer == ">=") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b >= a);
+                // Less than or Equal
+                } else if (buffer == "<=") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b <= a);
                 // Printing number
                 } else if (buffer == "*") {
                     printf("%d\n", stack.pop());
