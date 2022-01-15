@@ -253,6 +253,35 @@ void interpretProgram(const vector<string>& program) {
                     int a = stack.pop();
                     int b = stack.pop();
                     stack.push(b <= a);
+                // Bitwise And
+                } else if (buffer == "and") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(a & b);
+                // Bitwise Or
+                } else if (buffer == "or") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(a | b);
+                // Bitwise Not
+                } else if (buffer == "not") {
+                    int a = stack.pop();
+                    stack.push(~a);
+                // Bitwise Xor
+                } else if (buffer == "xor") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(a ^ b);
+                // Bitshift Left
+                } else if (buffer == "<<") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b << a);
+                // Bitshift Right
+                } else if (buffer == ">>") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(b >> a);
                 // Printing number
                 } else if (buffer == "*") {
                     printf("%d\n", stack.pop());
