@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 using std::string, std::vector;
 
@@ -258,6 +259,11 @@ void interpretProgram(const vector<string>& program) {
                 // Printing ascii character
                 } else if (buffer == "&") {
                     printf("%c", stack.pop());
+                // Single character input
+                } else if (buffer == "?") {
+                    char input;
+                    std::cin >> input;
+                    stack.push(input);
                 // Duplication
                 } else if (buffer == "%") {
                     int a = stack.pop();
