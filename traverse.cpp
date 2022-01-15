@@ -39,6 +39,31 @@ namespace Direction {
     const Vec2 opposite(const Vec2& dir) {
         return {dir.y * -1, dir.x * -1};
     }
+
+    const Vec2 rotated(const Vec2& dir, char c) {
+        if (c == '\\') {
+            if (dir == Direction::RIGHT) {
+                return Direction::DOWN;
+            } else if (dir == Direction::DOWN) {
+                return Direction::RIGHT;
+            } else if (dir == Direction::LEFT) {
+                return Direction::UP;
+            } else if (dir == Direction::UP) {
+                return Direction::LEFT;
+            }
+        } else if (c == '/') {
+            if (dir == Direction::DOWN) {
+                return Direction::LEFT;
+            } else if (dir == Direction::LEFT) {
+                return Direction::DOWN;
+            } else if (dir == Direction::RIGHT) {
+                return Direction::UP;
+            } else if (dir == Direction::UP) {
+                return Direction::RIGHT;
+            }
+        }
+        return dir;
+    }
 }
 
 class Stack : std::stack<int> {
@@ -312,29 +337,14 @@ void interpretProgram(const vector<string>& program) {
                 buffer += c;
         }
 
-        if (c == '\\') {
-            if (direction == Direction::RIGHT) {
-                direction = Direction::DOWN;
-            } else if (direction == Direction::DOWN) {
-                direction = Direction::RIGHT;
-            } else if (direction == Direction::LEFT) {
-                direction = Direction::UP;
-            } else if (direction == Direction::UP) {
-                direction = Direction::LEFT;
-            }
-        } else if (c == '/') {
-            if (direction == Direction::DOWN) {
-                direction = Direction::LEFT;
-            } else if (direction == Direction::LEFT) {
-                direction = Direction::DOWN;
-            } else if (direction == Direction::RIGHT) {
-                direction = Direction::UP;
-            } else if (direction == Direction::UP) {
-                direction = Direction::RIGHT;
-            }
-        }
-        
+        direction = Direction::rotated(direction, c);
+
         location.add(direction);
+
+        if (program[location.y][location.x] == ' ') {
+            Vec2 additional = Direction::rotated(direction, c);
+            if (additional != direction) location.add(additional);
+        }
     }
 }
 
