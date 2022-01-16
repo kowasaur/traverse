@@ -76,6 +76,7 @@ class Stack : std::stack<int> {
         }
         void push(int a) { std::stack<int>::push(a); }
         bool isEmpty() { return std::stack<int>::empty(); }
+        int size() { return std::stack<int>::size(); }
 };
 
 class ReturnStack {
@@ -298,6 +299,30 @@ void interpretProgram(const vector<string>& program) {
                     int a = stack.pop();
                     stack.push(a);
                     stack.push(a);
+                // Drop
+                } else if (buffer == "!") {
+                    stack.pop();
+                // Swap
+                } else if (buffer == "$") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    stack.push(a);
+                    stack.push(b);
+                // Rotation
+                } else if (buffer == "@") {
+                    int a = stack.pop();
+                    int b = stack.pop();
+                    int c = stack.pop();
+                    stack.push(b);
+                    stack.push(a);
+                    stack.push(c);
+                // DEBUG - print the stack
+                } else if (buffer == "`") {
+                    const int s = stack.size();
+                    for (int i = 0; i < s; i++) {
+                        printf("%d: %d\n", i, stack.pop());
+                    }
+                    exit(2);
                 // Procedures
                 } else if (proc_locs.contains(buffer)) {
                     return_stack.push(location, direction);
@@ -376,7 +401,7 @@ void interpretProgram(const vector<string>& program) {
 
         location.add(direction);
 
-        if (program[location.y][location.x] == ' ') {
+        if (program[location.y][location.x] == ' ' || location.x == (int) program[location.y].size()) {
             Vec2 additional = Direction::rotated(direction, c);
             if (additional != direction) location.add(additional);
         }

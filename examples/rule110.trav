@@ -1,0 +1,44 @@
+https://en.wikipedia.org/wiki/Rule_110
+
+SIZE}-32-{   the number of rows and columns
+RULE}-110-{  the pattern rule in binary
+INITIAL}-1-{ the initial state
+
+
+state index -> state index                /-'#'-\
+                                          |     \
+printChar}-%-@-$-%-@-%-@--1-$-<<-and-@->>-+-' '--&-$-{
+
+state -> state        /-sub-1-printChar-\
+                      \                 |
+printState}-SIZE-1-sub----------%-0->=--+-'\n'-&-!-{
+
+
+state index -> index state rule_index
+ruleIndex}-%-@-%-@---%-7-$-<<---@-and-$->>-{
+
+rule_index -> new_cell (1 or 0)
+newCell}-%-1-$-<<-RULE-and-$->>-{
+
+Combine these two variables due to stack limitations
+new_cell index -> index_with_new_cell
+compress}-1-<<-add-{
+
+index_with_new_cell -> new_cell index
+decompress}-%-1-and-$-1->>-{
+
+state -> new_state
+newState}-0-$-SIZE-2-sub---------------------------%-0-<--+-!-!-1-<<-1-add-{
+                        /                                 |
+                        |  /-compress-@-newCell-ruleIndex-/
+                        |  |
+                        |  \-@-1-<<-$-decompress-\
+                        |                        |
+                        \-----sub-1-@-@-add-@-@--/
+                      
+
+                   /------------$--newState--\
+                   \                         |
+main}-INITIAL-SIZE---%-+--1-sub-$-printState-/
+                       |
+                       \-0-{
