@@ -43,24 +43,24 @@ namespace Direction {
 
     const Vec2 rotated(const Vec2& dir, char c) {
         if (c == '\\') {
-            if (dir == Direction::RIGHT) {
-                return Direction::DOWN;
-            } else if (dir == Direction::DOWN) {
-                return Direction::RIGHT;
-            } else if (dir == Direction::LEFT) {
-                return Direction::UP;
-            } else if (dir == Direction::UP) {
-                return Direction::LEFT;
+            if (dir == RIGHT) {
+                return DOWN;
+            } else if (dir == DOWN) {
+                return RIGHT;
+            } else if (dir == LEFT) {
+                return UP;
+            } else if (dir == UP) {
+                return LEFT;
             }
         } else if (c == '/') {
-            if (dir == Direction::DOWN) {
-                return Direction::LEFT;
-            } else if (dir == Direction::LEFT) {
-                return Direction::DOWN;
-            } else if (dir == Direction::RIGHT) {
-                return Direction::UP;
-            } else if (dir == Direction::UP) {
-                return Direction::RIGHT;
+            if (dir == DOWN) {
+                return LEFT;
+            } else if (dir == LEFT) {
+                return DOWN;
+            } else if (dir == RIGHT) {
+                return UP;
+            } else if (dir == UP) {
+                return RIGHT;
             }
         }
         return dir;
@@ -107,7 +107,7 @@ void crash(const char* error, const string& token, const Vec2& location) {
     int y = location.y + 1;
     int x = location.x + 1;
     const char* t = token.c_str();
-    printf("`%s` at line %d column %d caused the following error:\n\t%s\n", t, y, x, error);
+    printf("\n`%s` at line %d column %d caused the following error:\n\t%s\n", t, y, x, error);
     exit(1);
 }
 
@@ -401,7 +401,7 @@ void interpretProgram(const vector<string>& program) {
 
         location.add(direction);
 
-        if (program[location.y][location.x] == ' ' || location.x == (int) program[location.y].size()) {
+        if (location.x == (int) program[location.y].size() || program[location.y][location.x] == ' ') {
             Vec2 additional = Direction::rotated(direction, c);
             if (additional != direction) location.add(additional);
         }
